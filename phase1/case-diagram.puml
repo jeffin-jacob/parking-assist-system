@@ -1,0 +1,36 @@
+@startuml
+
+left to right direction
+
+actor Obstacle
+
+rectangle "Parking Assist System" {
+
+usecase "Detected within 101-150 cm" as UC1A
+usecase "Detected within 51-100 cm" as UC2A
+usecase "Detected within 1-50 cm" as UC3A
+
+usecase "Buzz buzzer once per second" as UC1B
+usecase "Buzz buzzer twice per second" as UC2B
+usecase "Buzz buzzer continuously" as UC3B
+
+}
+
+actor Driver
+
+Obstacle --> UC1A
+UC1A -[hidden]-> UC1B
+UC1A .> UC1B : includes
+UC1B --> Driver
+
+Obstacle --> UC2A
+UC2A -[hidden]-> UC2B
+UC2A .> UC2B : includes
+UC2B --> Driver
+
+Obstacle --> UC3A
+UC3A -[hidden]-> UC3B
+UC3A .> UC3B : includes
+UC3B --> Driver
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+
+class ParkingAssistManager {
+**Responsibilities**
+* Orchestrate main finite-state machine
+* Manage transitions
+* Coordinate components
+**Collaborators**
+* BuzzerController
+* CalculateDistance
+}
+
+class BuzzerController {
+**Responsibilities**
+* Control buzzer
+* Implement patterns
+**Collaborators**
+* ParkingAssistManager
+}
+
+class DistanceCalculator {
+**Responsibilities**
+* Process ultrasonic sensor data
+* Return distance
+**Collaborators**
+* ParkingAssistManager
+}
+
+ParkingAssistManager --> BuzzerController : uses
+ParkingAssistManager --> DistanceCalculator : requests distance
+
+@enduml

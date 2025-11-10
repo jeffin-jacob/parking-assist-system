@@ -1,0 +1,33 @@
+@startuml
+
+package "Hardware Layer" {
+usecase [Buzzer]
+usecase [Ultrasonic Sensor] as UltrasonicSensor
+usecase [Arduino Nano] as ArduinoNano
+}
+
+package "Driver Layer" {
+usecase [Buzzer Driver] as BuzzerDriver
+usecase [Ultrasonic Sensor Driver] as UltrasonicSensorDriver
+}
+
+package "Service Layer" {
+usecase [Distance Calculator] as DistanceCalculator
+usecase [Buzzer Controller] as BuzzerController
+}
+
+package "Application Layer" {
+usecase [Parking Assist Manager] as ParkingAssistManager
+usecase [Finite State Machine Engine] as FSMEngine
+}
+
+ArduinoNano --> BuzzerDriver : GPIO Input
+ArduinoNano --> UltrasonicSensorDriver : GPIO Input
+BuzzerDriver --> BuzzerController : Buzzer States
+UltrasonicSensorDriver --> DistanceCalculator : Ultrasonic Sensor Events
+DistanceCalculator --> ParkingAssistManager : Distance Events
+BuzzerController --> ParkingAssistManager : Buzzer Feedback
+ParkingAssistManager --> FSMEngine : State Transitions
+FSMEngine --> ParkingAssistManager : State Actions
+
+@enduml

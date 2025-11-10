@@ -1,0 +1,23 @@
+@startuml
+
+hide empty description
+
+[*] --> QUIET : System Start
+
+QUIET -[#green]-> BUZZ_1 #green : <color:green>100 < DISTANCE (cm) ≤ 150
+QUIET -[#orange]-> BUZZ_2 #orange : <color:orange>50 < DISTANCE (cm) ≤ 100
+QUIET -[#red]-> BUZZ_3 #red : <color:red>0 < DISTANCE (cm) ≤ 50
+
+BUZZ_1 --> QUIET : 150 < DISTANCE (cm)
+BUZZ_1 -[#orange]-> BUZZ_2 #orange : <color:orange>50 < DISTANCE (cm) ≤ 100
+BUZZ_1 -[#red]-> BUZZ_3 #red : <color:red>0 < DISTANCE (cm) ≤ 50
+
+BUZZ_2 --> QUIET : 150 < DISTANCE (cm)
+BUZZ_2 -[#green]-> BUZZ_1 #green : <color:green>100 < DISTANCE (cm) ≤ 150
+BUZZ_2 -[#red]-> BUZZ_3 #red : <color:red>0 < DISTANCE (cm) ≤ 50
+
+BUZZ_3 --> QUIET : 150 < DISTANCE (cm)
+BUZZ_3 -[#green]-> BUZZ_1 #green : <color:green>100 < DISTANCE (cm) ≤ 150
+BUZZ_3 -[#orange]-> BUZZ_2 #orange : <color:orange>50 < DISTANCE (cm) ≤ 100
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+
+package "Software Stack" {
+    class "Arduino IDE" as ArduinoIDE {
+        * Version: 2.3.6
+    }
+    class FreeRTOS {
+        * Kernel for Arduino
+    }
+    class Wokwi {
+        * Online embedded simulator
+    }
+}
+
+package "Hardware Stack" {
+    class "Arduino Nano" as ArduinoNano {
+        * Microcontroller: ATmega328
+        * Digital I/O Pins: 22
+        * Analog IN Pins: 8
+        **Status**
+        * Ordered
+    }
+    class Buzzer {
+        * Adafruit Buzzer 5V - Breadboard friendly
+        * Oscillates at 2 KHz
+        **Status**
+        * Ordered
+    }
+    class "Ultrasonic Sensor" as Sensor {
+        * HC-SR04 Ultrasonic Sonar Distance Sensor
+        * Range of up to 400 cm away
+        * 40 Hz sample rate
+        **Status**
+        * Ordered
+    }
+    class "Power Supply" as PowerSupply {
+        * USB Mini-B cable
+        **Status**
+        * Ordered
+    }
+}
+
+ArduinoIDE --> FreeRTOS : includes
+Wokwi --> ArduinoNano : simulates
+ArduinoNano --> Buzzer : controls
+ArduinoNano --> Sensor : reads from
+ArduinoNano --> PowerSupply : powered by
+
+@enduml
