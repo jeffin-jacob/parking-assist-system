@@ -7,8 +7,11 @@ all: build/src.ino.hex
 	$(CXX) upload --input-dir build -p $(BOARD) $(CXXFLAGS) src
 	$(CXX) monitor -p $(BOARD)
 
-build/src.ino.hex: src/src.ino src/buzzer.ino
+build/src.ino.hex: src/src.ino src/buzzer.ino | build
 	$(CXX) compile $(CXXFLAGS) --build-path build src
+
+build:
+	mkdir -p $@
 
 clean:
 	rm -r build/*
