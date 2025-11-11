@@ -1,0 +1,9 @@
+{
+  "additionalFiles": "",
+  "compiler.optimization_flags": "",
+  "customBuildProperties": "",
+  "fqbn": "arduino:avr:nano",
+  "hardwareFolders": "/Users/jeffinjacob/Library/Arduino15/packages",
+  "otherLibrariesFolders": "/Users/jeffinjacob/Documents/Arduino/libraries",
+  "sketchLocation": "/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/src"
+}
