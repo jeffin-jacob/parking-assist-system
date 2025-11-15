@@ -1,31 +1,29 @@
 #include <Arduino_FreeRTOS.h>
 #include <semphr.h>
 
-#define BUZZER_STACK_SIZE 64 // words not bytes
-#define BUZZER_PRIORITY 1
-
-enum Distance { Safe, Caution, Danger, Stop };
-
-volatile Distance system_state = Safe;
-SemaphoreHandle_t xMutex = NULL;
+void sensor_task(void *) {
+    const int trig_pin = 11, echo_pin = 12;
+    pinMode(trig_pin, OUTPUT);
+    pinMode(echo_pin, INPUT);
+    float duration = 0.0, distance = 0.0;
+    const TickType_t xDelay = 100 / portTICK_PERIOD_MS;
+    for (;;) {
+        digitalWrite(trig_pin, LOW);
+        delayMicroseconds(2);
+        digitalWrite(trig_pin, HIGH);
+        delayMicroseconds(10);
+        digitalWrite(trig_pin, LOW);
+        duration = pulseIn(echo_pin, HIGH);
+        distance = (duration * 0.0343) / 2.0;
+        // process distance
+        vTaskDelay(xDelay);
+    }
+}
 
 void setup() {
     Serial.begin(9600);
-    while (!Serial) {
-        // wait for serial port to initialize
-    }
-    xMutex = xSemaphoreCreateMutex();
-    if (xMutex == NULL) {
-        Serial.println("mutex creation failed");
-        return;
-    }
-    BaseType_t xReturn;
-    xReturn = xTaskCreate(buzzer_task, "buzzer task", BUZZER_STACK_SIZE, NULL,
-                          BUZZER_PRIORITY, NULL);
-    if (xReturn != pdPASS) {
-        Serial.println("task creation failed");
-        vSemaphoreDelete(xMutex);
-        return;
+    if (xTaskCreate(sensor_task, "sensor task", 64, NULL, 1, NULL) != pdPASS) {
+        Serial.println("sensor-task creation failed");
     }
 }
 

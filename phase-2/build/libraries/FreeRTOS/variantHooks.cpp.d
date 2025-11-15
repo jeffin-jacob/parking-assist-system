@@ -1,0 +1,24 @@
+/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/build/libraries/FreeRTOS/variantHooks.cpp.o: \
+ /Users/jeffinjacob/Documents/Arduino/libraries/FreeRTOS/src/variantHooks.cpp \
+ /Users/jeffinjacob/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino/Arduino.h \
+ /Users/jeffinjacob/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino/binary.h \
+ /Users/jeffinjacob/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino/WCharacter.h \
+ /Users/jeffinjacob/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino/WString.h \
+ /Users/jeffinjacob/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino/HardwareSerial.h \
+ /Users/jeffinjacob/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino/Stream.h \
+ /Users/jeffinjacob/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino/Print.h \
+ /Users/jeffinjacob/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino/Printable.h \
+ /Users/jeffinjacob/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino/USBAPI.h \
+ /Users/jeffinjacob/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino/Arduino.h \
+ /Users/jeffinjacob/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/variants/eightanaloginputs/pins_arduino.h \
+ /Users/jeffinjacob/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/variants/eightanaloginputs/../standard/pins_arduino.h \
+ /Users/jeffinjacob/Documents/Arduino/libraries/FreeRTOS/src/Arduino_FreeRTOS.h \
+ /Users/jeffinjacob/Documents/Arduino/libraries/FreeRTOS/src/FreeRTOSConfig.h \
+ /Users/jeffinjacob/Documents/Arduino/libraries/FreeRTOS/src/projdefs.h \
+ /Users/jeffinjacob/Documents/Arduino/libraries/FreeRTOS/src/portable.h \
+ /Users/jeffinjacob/Documents/Arduino/libraries/FreeRTOS/src/portmacro.h \
+ /Users/jeffinjacob/Documents/Arduino/libraries/FreeRTOS/src/mpu_wrappers.h \
+ /Users/jeffinjacob/Documents/Arduino/libraries/FreeRTOS/src/FreeRTOSVariant.h \
+ /Users/jeffinjacob/Documents/Arduino/libraries/FreeRTOS/src/task.h \
+ /Users/jeffinjacob/Documents/Arduino/libraries/FreeRTOS/src/list.h \
+ /Users/jeffinjacob/Documents/Arduino/libraries/FreeRTOS/src/timers.h

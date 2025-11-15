@@ -7,8 +7,15 @@ all: build/src.ino.hex
 	$(CXX) upload --input-dir build -p $(BOARD) $(CXXFLAGS) src
 	$(CXX) monitor -p $(BOARD)
 
-build/src.ino.hex: src/src.ino src/buzzer.ino | build
+test: build/test.ino.hex
+	$(CXX) upload --input-dir build -p $(BOARD) $(CXXFLAGS) test
+	$(CXX) monitor -p $(BOARD)
+
+build/src.ino.hex: src/src.ino | build
 	$(CXX) compile $(CXXFLAGS) --build-path build src
+
+build/test.ino.hex: test/test.ino | build
+	$(CXX) compile $(CXXFLAGS) --build-path build test
 
 build:
 	mkdir -p $@
@@ -16,4 +23,4 @@ build:
 clean:
 	rm -r build/*
 
-.PHONY: all clean
+.PHONY: all test build clean
