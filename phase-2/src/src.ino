@@ -15,7 +15,7 @@ void sensor_task(void *) {
         digitalWrite(trig_pin, LOW);
         duration = pulseIn(echo_pin, HIGH);
         distance = (duration * 0.0343) / 2.0;
-        // process distance
+        // TODO process distance
         vTaskDelay(xDelay);
     }
 }
@@ -24,7 +24,9 @@ void setup() {
     Serial.begin(9600);
     if (xTaskCreate(sensor_task, "sensor task", 64, NULL, 1, NULL) != pdPASS) {
         Serial.println("sensor-task creation failed");
+        return;
     }
+    // TODO buzzer task
 }
 
 void loop() {}
