@@ -1,0 +1,66 @@
+\documentclass[12pt]{article}
+
+\usepackage{float}
+\usepackage[font=small]{caption}
+\usepackage{graphicx}
+
+\begin{document}
+
+\title{
+    Parking Assist System: Phase 2 \\ 
+    \large Version 1
+}
+\author{Jeffin Jacob}
+\date{}
+\maketitle
+
+\newpage
+
+\section{Hardware Components}
+The Parking Assist System Prototype consists of:
+\begin{enumerate}
+    \item Arduino Nano
+    \item HC-SR04 Ultrasonic Sonar Distance Sensor
+    \item 5V Buzzer
+\end{enumerate}
+These 3 components are connected by a half-size breadboard and 8 male to male
+jumper wires. Power is provided to the Arduino Nano by an M1 MacBook Air via a
+USB-C to Micro-B cable.
+
+\section{Software Components}
+The codebase consists of:
+\begin{itemize}
+    \item \texttt{sensor\_task()}
+    \item \texttt{setup()}
+\end{itemize}
+\textit{Sensor Task} is a FreeRTOS task that pulses the ultrasonic sensor to
+determine the relative distance of nearby obstacles. It then updates a state
+variable accordingly. \textit{Setup} initializes all tasks and semaphores.
+
+\section{Test Scripts and Patterns}
+\subsection{Sensor-Task Test}
+\textit{Sensor-Task Test} is responsible for verifying the functionality of
+Sensor Task. Sensor-Task Test runs concurrently, alongside Sensor Task, 
+prompting the tester, via serial output, to place an obstacle at various 
+distances from the sensor, and checking whether the state variable has been 
+correctly updated, conveying the result to serial output.
+
+\section{Images}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{image.jpeg}
+    \caption{Parking Assist System Prototype}
+\end{figure}
+
+\section{Observations and Notes}
+\subsection{Progress}
+The project is 50\% complete. I have a working Sensor Task, which writes the
+system's state; now, I need to implement a \textit{Buzzer Task}, which will read
+the system's state and sound the buzzer at the appropriate frequency.
+
+\subsection{Setbacks}
+A minor setback has been the conversion of the duration of ultrasonic pulses to
+distance. Further testing must be done to determine the accuracy of the current
+implementation.
+
+\end{document}
