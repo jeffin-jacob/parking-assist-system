@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#line 1 "/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/src/src.ino"
 #include <Arduino_FreeRTOS.h>
 #include <semphr.h>
 
@@ -24,6 +26,29 @@ parking_state current_state = SAFE;
 
 SemaphoreHandle_t xMutex = NULL;
 
+#line 27 "/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/src/src.ino"
+char * parking_state_to_string(parking_state s);
+#line 46 "/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/src/src.ino"
+bool is_in_bound(const float distance, const float lower_bound, const float upper_bound);
+#line 54 "/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/src/src.ino"
+parking_state distance_to_state(const float distance);
+#line 67 "/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/src/src.ino"
+float get_distance_cm(const int trig_pin, const int echo_pin);
+#line 77 "/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/src/src.ino"
+void sensor_task(void *);
+#line 94 "/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/src/src.ino"
+void test_prompt(const float lower_bound);
+#line 100 "/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/src/src.ino"
+void test_prompt(const float lower_bound, const float upper_bound);
+#line 108 "/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/src/src.ino"
+void cycle_tests(parking_state expected);
+#line 125 "/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/src/src.ino"
+void test_task(void *);
+#line 145 "/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/src/src.ino"
+void setup();
+#line 171 "/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/src/src.ino"
+void loop();
+#line 27 "/Users/jeffinjacob/Documents/cse321/parking-assist-system/phase-2/src/src.ino"
 inline char *parking_state_to_string(parking_state s) {
     char *ret;
     switch (s) {
@@ -169,3 +194,4 @@ void setup() {
 }
 
 void loop() {}
+
