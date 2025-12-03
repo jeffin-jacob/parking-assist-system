@@ -1,11 +1,16 @@
 #include <Arduino_FreeRTOS.h>
 #include <semphr.h>
 
+#define TRIG_PIN 11
+#define ECHO_PIN 12
+
+#define BUZZER_PIN LED_BUILTIN
+
 #define SENSOR_TASK_STACK_SIZE 64
 #define SENSOR_TASK_PRIORITY 1
 
-#define TEST_TASK_STACK_SIZE 64
-#define TEST_TASK_PRIORITY 1
+#define BUZZER_TASK_STACK_SIZE 64
+#define BUZZER_TASK_PRIORITY 1
 
 #define HALT_LOWER_BOUND 0.0
 #define HALT_UPPER_BOUND 5.0
@@ -20,7 +25,7 @@
 
 enum parking_state { HALT, DANGER, CAUTION, SAFE };
 
-parking_state current_state = SAFE;
+volatile parking_state current_state = SAFE;
 
 SemaphoreHandle_t xMutex = NULL;
 
@@ -64,23 +69,22 @@ inline parking_state distance_to_state(const float distance) {
     }
 }
 
-float get_distance_cm(const int trig_pin, const int echo_pin) {
-    digitalWrite(trig_pin, LOW);
+float get_distance_cm() {
+    digitalWrite(TRIG_PIN, LOW);
     delayMicroseconds(2);
-    digitalWrite(trig_pin, HIGH);
+    digitalWrite(TRIG_PIN, HIGH);
     delayMicroseconds(10);
-    digitalWrite(trig_pin, LOW);
-    unsigned long duration = pulseIn(echo_pin, HIGH);
+    digitalWrite(TRIG_PIN, LOW);
+    unsigned long duration = pulseIn(ECHO_PIN, HIGH);
     return duration * 0.0343 / 2.0;
 }
 
 void sensor_task(void *) {
-    const int trig_pin = 11, echo_pin = 12;
-    pinMode(trig_pin, OUTPUT);
-    pinMode(echo_pin, INPUT);
+    pinMode(TRIG_PIN, OUTPUT);
+    pinMode(ECHO_PIN, INPUT);
     const TickType_t xTicksToWait = 10;
     for (;;) {
-        float distance = get_distance_cm(trig_pin, echo_pin);
+        float distance = get_distance_cm();
         parking_state new_state = distance_to_state(distance);
         if (new_state != current_state) {
             if (xSemaphoreTake(xMutex, xTicksToWait) == pdTRUE) {
@@ -91,54 +95,13 @@ void sensor_task(void *) {
     }
 }
 
-inline void test_prompt(const float lower_bound) {
-    Serial.print("Place obstacle past ");
-    Serial.print(lower_bound);
-    Serial.print(" cm... ");
-}
-
-inline void test_prompt(const float lower_bound, const float upper_bound) {
-    Serial.print("Place obstacle between ");
-    Serial.print(lower_bound);
-    Serial.print(" cm and ");
-    Serial.print(upper_bound);
-    Serial.print(" cm... ");
-}
-
-inline void cycle_tests(parking_state expected) {
-    switch (expected) {
-        case HALT:
-            test_prompt(HALT_LOWER_BOUND, HALT_UPPER_BOUND);
-            break;
-        case DANGER:
-            test_prompt(DANGER_LOWER_BOUND, DANGER_UPPER_BOUND);
-            break;
-        case CAUTION:
-            test_prompt(CAUTION_LOWER_BOUND, CAUTION_UPPER_BOUND);
-            break;
-        case SAFE:
-            test_prompt(SAFE_LOWER_BOUND);
-            break;
-    }
-}
-
-void test_task(void *) {
-    const TickType_t xDelay = 5000 / portTICK_PERIOD_MS;
-    Serial.println("Begin Test");
-    for (parking_state expected = HALT;;
-         expected = (expected + 1) % (SAFE + 1)) {
-        cycle_tests(expected);
-        vTaskDelay(xDelay);
-        parking_state actual;
-        if (xSemaphoreTake(xMutex, portMAX_DELAY) == pdTRUE) {
-            actual = current_state;
-            xSemaphoreGive(xMutex);
-        }
-        if (actual == expected) {
-            Serial.println("Pass");
-        } else {
-            Serial.println("Fail");
-        }
+void buzzer_task(void *) {
+    pinMode(BUZZER_PIN, OUTPUT);
+    const TickType_t xTicksToWait = 10;
+    for (;;) {
+        // if (xSemaphoreTake(xMutex, xTicksToWait) == pdTRUE) {
+        //     xSemaphoreGive(xMutex);
+        // }
     }
 }
 
@@ -156,16 +119,15 @@ void setup() {
         vSemaphoreDelete(xMutex);
         return;
     }
-    if (xTaskCreate(test_task, "test task", TEST_TASK_STACK_SIZE, NULL,
-                    TEST_TASK_PRIORITY, NULL) != pdPASS) {
-        Serial.println("test-task creation failed");
+    if (xTaskCreate(buzzer_task, "buzzer task", BUZZER_TASK_STACK_SIZE, NULL,
+                    BUZZER_TASK_PRIORITY, NULL) != pdPASS) {
+        Serial.println("buzzer-task creation failed");
         vSemaphoreDelete(xMutex);
         if (xSensorTaskHandle != NULL) {
             vTaskDelete(xSensorTaskHandle);
         }
         return;
     }
-    // TODO buzzer task
 }
 
 void loop() {}
