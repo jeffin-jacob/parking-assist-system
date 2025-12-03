@@ -56,25 +56,6 @@ inline void terminate_program() {
     }
 }
 
-inline char *parking_state_to_string(parking_state s) {
-    char *ret;
-    switch (s) {
-        case HALT:
-            ret = "HALT";
-            break;
-        case DANGER:
-            ret = "DANGER";
-            break;
-        case CAUTION:
-            ret = "CAUTION";
-            break;
-        case SAFE:
-            ret = "SAFE";
-            break;
-    }
-    return ret;
-}
-
 inline bool is_in_bound(const float distance, const float lower_bound,
                         const float upper_bound) {
     if (lower_bound <= distance && distance < upper_bound) {
