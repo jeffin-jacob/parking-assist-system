@@ -1,5 +1,6 @@
 #include <Arduino_FreeRTOS.h>
 #include <semphr.h>
+#include <timers.h>
 
 #define TRIG_PIN 11
 #define ECHO_PIN 12
@@ -12,7 +13,7 @@
 #define BUZZER_TASK_STACK_SIZE 64
 #define BUZZER_TASK_PRIORITY 1
 
-#define HALT_LOWER_BOUND 0.0
+#define HALT_LOWER_BOUND 2.0
 #define HALT_UPPER_BOUND 5.0
 
 #define DANGER_LOWER_BOUND 5.0
@@ -23,11 +24,37 @@
 
 #define SAFE_LOWER_BOUND 15.0
 
+#define DANGER_BUZZER_PERIOD 250 / portTICK_PERIOD_MS
+#define CAUTION_BUZZER_PERIOD 500 / portTICK_PERIOD_MS
+
 enum parking_state { HALT, DANGER, CAUTION, SAFE };
 
 volatile parking_state current_state = SAFE;
 
 SemaphoreHandle_t xMutex = NULL;
+
+TaskHandle_t xSensorTaskHandle = NULL;
+TaskHandle_t xBuzzerTaskHandle = NULL;
+
+TimerHandle_t xTimerHandle = NULL;
+
+volatile bool is_buzzer_on = false;
+
+inline void terminate_program() {
+    if (xMutex != NULL) {
+        vSemaphoreDelete(xMutex);
+    }
+    if (xSensorTaskHandle != NULL) {
+        vTaskDelete(xSensorTaskHandle);
+    }
+    if (xBuzzerTaskHandle != NULL) {
+        vTaskDelete(xBuzzerTaskHandle);
+    }
+    if (xTimerHandle != NULL) {
+        while (xTimerDelete(xTimerHandle, 0) == pdFAIL)
+            ;
+    }
+}
 
 inline char *parking_state_to_string(parking_state s) {
     char *ret;
@@ -57,7 +84,9 @@ inline bool is_in_bound(const float distance, const float lower_bound,
 }
 
 inline parking_state distance_to_state(const float distance) {
-    if (is_in_bound(distance, HALT_LOWER_BOUND, HALT_UPPER_BOUND)) {
+    if (distance < HALT_LOWER_BOUND) {
+        return current_state;
+    } else if (is_in_bound(distance, HALT_LOWER_BOUND, HALT_UPPER_BOUND)) {
         return HALT;
     } else if (is_in_bound(distance, DANGER_LOWER_BOUND, DANGER_UPPER_BOUND)) {
         return DANGER;
@@ -90,18 +119,68 @@ void sensor_task(void *) {
             if (xSemaphoreTake(xMutex, xTicksToWait) == pdTRUE) {
                 current_state = new_state;
                 xSemaphoreGive(xMutex);
+                xTaskNotifyGive(xBuzzerTaskHandle);
             }
         }
+    }
+}
+
+void vTimerCallback(TimerHandle_t) {
+    if (is_buzzer_on) {
+        digitalWrite(BUZZER_PIN, LOW);
+    } else {
+        digitalWrite(BUZZER_PIN, HIGH);
+    }
+    is_buzzer_on = !is_buzzer_on;
+}
+
+inline void timer_off() {
+    if (xTimerIsTimerActive(xTimerHandle) != pdFALSE) {
+        if (xTimerDelete(xTimerHandle, 0) == pdFAIL) {
+            Serial.println("Non-fatal Error: failed to stop timer");
+        }
+    }
+}
+
+inline void change_buzzer_period(parking_state new_state) {
+    static const char *error_msg =
+        "Non-fatal Error: failed to change timer period";
+    switch (new_state) {
+        case HALT:
+            digitalWrite(BUZZER_PIN, HIGH);
+            is_buzzer_on = true;
+            break;
+        case DANGER:
+            if (xTimerChangePeriod(xTimerHandle, DANGER_BUZZER_PERIOD, 0) ==
+                pdFAIL) {
+                Serial.println(error_msg);
+            }
+            break;
+        case CAUTION:
+            if (xTimerChangePeriod(xTimerHandle, CAUTION_BUZZER_PERIOD, 0) ==
+                pdFAIL) {
+                Serial.println(error_msg);
+            }
+            break;
+        case SAFE:
+            digitalWrite(BUZZER_PIN, LOW);
+            is_buzzer_on = false;
+            break;
     }
 }
 
 void buzzer_task(void *) {
     pinMode(BUZZER_PIN, OUTPUT);
     const TickType_t xTicksToWait = 10;
+    parking_state new_state;
     for (;;) {
-        // if (xSemaphoreTake(xMutex, xTicksToWait) == pdTRUE) {
-        //     xSemaphoreGive(xMutex);
-        // }
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        if (xSemaphoreTake(xMutex, xTicksToWait) == pdTRUE) {
+            new_state = current_state;
+            xSemaphoreGive(xMutex);
+            timer_off();
+            change_buzzer_period(new_state);
+        }
     }
 }
 
@@ -109,23 +188,25 @@ void setup() {
     Serial.begin(9600);
     xMutex = xSemaphoreCreateMutex();
     if (xMutex == NULL) {
-        Serial.println("mutex creation failed");
+        Serial.println("Fatal Error: failed to create mutex");
         return;
     }
-    TaskHandle_t xSensorTaskHandle = NULL;
+    xTimerHandle = xTimerCreate("timer", 1, pdTRUE, NULL, vTimerCallback);
+    if (xTimerHandle == NULL) {
+        Serial.println("Fatal Error: failed to create timer");
+        terminate_program();
+        return;
+    }
     if (xTaskCreate(sensor_task, "sensor task", SENSOR_TASK_STACK_SIZE, NULL,
                     SENSOR_TASK_PRIORITY, &xSensorTaskHandle) != pdPASS) {
-        Serial.println("sensor-task creation failed");
-        vSemaphoreDelete(xMutex);
+        Serial.println("Fatal Error: failed to create sensor task");
+        terminate_program();
         return;
     }
     if (xTaskCreate(buzzer_task, "buzzer task", BUZZER_TASK_STACK_SIZE, NULL,
-                    BUZZER_TASK_PRIORITY, NULL) != pdPASS) {
-        Serial.println("buzzer-task creation failed");
-        vSemaphoreDelete(xMutex);
-        if (xSensorTaskHandle != NULL) {
-            vTaskDelete(xSensorTaskHandle);
-        }
+                    BUZZER_TASK_PRIORITY, &xBuzzerTaskHandle) != pdPASS) {
+        Serial.println("Fatal Error: failed to create buzzer task");
+        terminate_program();
         return;
     }
 }
