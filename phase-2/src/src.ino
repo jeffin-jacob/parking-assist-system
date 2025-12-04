@@ -5,7 +5,7 @@
 #define TRIG_PIN 11
 #define ECHO_PIN 12
 
-#define BUZZER_PIN LED_BUILTIN
+#define BUZZER_PIN 13
 
 #define SENSOR_TASK_STACK_SIZE 64
 #define SENSOR_TASK_PRIORITY 1
