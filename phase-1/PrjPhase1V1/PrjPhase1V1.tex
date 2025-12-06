@@ -1,0 +1,69 @@
+\documentclass[10pt]{article}
+
+\usepackage{indentfirst}
+\usepackage{float}
+\usepackage[font=small]{caption}
+\usepackage{graphicx}
+
+\begin{document}
+
+\title{Parking Assist System: Phase 1 \\
+\large Version 1}
+\author{Jeffin Jacob}
+\date{}
+\maketitle
+
+\newpage
+
+\section{Statement}
+Parking assist systems are used in motor vehicles to alert drivers of obstacles
+while reversing. They are a hard real-time embedded system because missing a
+deadline may lead to catastrophic failure, a collision. Functionally, the system
+shall produce 1 audible beep per second while 101-150 cm away from an obstacle,
+2 audible beeps per second while 51-100 cm away from an obstacle, and continuous
+buzzing while 1-50 cm away from an obstacle. As aforementioned, the system is
+hard real-time; therefore, the end-to-end response time, between the ultrasonic
+sensor and the buzzer, shall be no more than 50 ms, and the sampling rate of the
+ultrasonic sensor shall be no less than 40 Hz.
+
+\section{Use Cases}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{uml-diagrams/case-diagram.png}
+    \caption{Use case diagram of a parking assist system}
+\end{figure}
+
+\section{Classes, Responsibilities, and Collaborators}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{uml-diagrams/crc-cards.png}
+    \caption{CRC cards for a parking assist system}
+\end{figure}
+
+\section{Sequence and Structure}
+\subsection{Process Flow}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth, height=0.3\textheight]
+    {uml-diagrams/flowchart.png}
+    \caption{Finite-state machine diagram, or flowchart, of a parking assist
+    system}
+\end{figure}
+
+\subsection{Architecture}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]
+    {uml-diagrams/architectural-block-diagram.png}
+    \caption{Architectural block diagram of a parking assist system}
+\end{figure}
+
+\section{Components}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth, height=0.3\textheight]
+    {uml-diagrams/component-list.png}
+    \caption{Component list of a parking assist system}
+\end{figure}
+
+\end{document}

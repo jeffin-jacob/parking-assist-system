@@ -1,0 +1,63 @@
+\documentclass{beamer}
+
+\title{Parking Assist System
+\large Presentation}
+\author{Jeffin Jacob}
+\date{December 7, 2025}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+    \frametitle{Introduction}
+    Parking assist systems are used in motor vehicles to alert drivers of 
+    obstacles while reversing. They are a hard real-time embedded system because
+    missing a deadline may lead to catastrophic failure, a collision. My system
+    utilizes an ultrasonic sensor and a buzzer to produce a range of audible
+    updates, based on its distance from an obstacle.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Features}
+    As previously aforementioned, my parking assist system features an 
+    ultrasonic sensor which determines distance from an obstacle and prompts a 
+    buzzer to beep at various frequencies. If the obstacle is 10-15 cm from the 
+    sensor, the buzzer will beep once per second.  If the obstacle is 5-10 cm 
+    from the sensor, the buzzer will beep twice per second.  If the obstacle is 
+    0-5 cm from the sensor, the buzzer will continuously buzz.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Challenges}
+    I faced many challenges while developing my parking assist system. One that
+    immediately comes to mind is handling erroneous sensor data. The ultrasonic
+    sensor would occasionally process inaccurate readings and produce a distance
+    of 0 cm, which would immediately put the system in its final state
+    where the buzzer is continuously buzzing. To overcome this I decided to
+    ignore distances of 0 cm, and not change the system's state when they are
+    encountered. This does not compromise the robustness of the system, as, with
+    valid sensor readings, a distance of 0 cm is not possible, and,
+    additionally, the ultrasonic sensor I used, the HC-SR04, is not rated for
+    anything sub 2 cm.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Updates}
+    I would like to add driver intervention to my parking assist system. For
+    example, have the system apply the vehicles brakes to prevent a collision. I
+    think this is the next logical step for my parking assist system. I would
+    also like to add another sensor to the system because, when it comes to
+    safety critical systems, redundancy is key.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    I learned a great deal while developing my parking assist system, as it was 
+    my first time developing real-time software. I have gained exposure to 
+    priority-based tasks, concurrency, and software timers. This experience was 
+    invaluable to me and it certainly will not be my last time engineering 
+    embedded systems.
+\end{frame}
+
+\end{document}
