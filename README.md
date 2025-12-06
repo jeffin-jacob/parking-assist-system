@@ -3,8 +3,8 @@
 ### Documentation
 Please refer to the official
 [Arduino CLI Documentation](https://docs.arduino.cc/arduino-cli/) on how to
-(1) install `arduino-cli`, (2) install the `arduino:avr:nano` platform core, and
-(3) identify which port your board is connected to.
+install `arduino-cli`, install the `arduino:avr:nano` platform core, and
+identify which port your board is connected to.
 ### Software
 - `make`
 - `arduino-cli`
