@@ -1,5 +1,10 @@
 # Steps to Build and Upload from Source
 ## Step 0: Dependencies
+### Documentation
+Please refer to the official
+[Arduino CLI Documentation](https://docs.arduino.cc/arduino-cli/) on how to
+install `arduino-cli`, install platform cores, and identify which port your
+board is connected to.
 ### Software
 - `make`
 - `arduino-cli`
@@ -29,5 +34,4 @@ Using jumper wires, configure the circuit in accordance to the following tables:
 First, clone this repository. Next, in a terminal emulator, navigate to the
 repository's root. Then, run `cd codebase` to navigate to the codebases' root.
 Lastly, once in `codebase/`, run `make PORT=<port>`, where `<port>` is the port
-to which the board is connected to, which is obtained by running `arduino-cli
-board list`.
+to which the board is connected to.
