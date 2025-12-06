@@ -42,4 +42,5 @@ the obstacle is 5-10 cm from the sensor, the buzzer will beep twice per second.
 If the obstacle is 0-5 cm from the sensor, the buzzer will continuously buzz.
 ## Step 4: Have Even More Fun! *(optional yet recommended)*
 Power the Arduino Nano using a small battery pack and mount the components onto
-a toy car.
+a toy car. Simulate real-world scenarios, and see the parking assist system
+prevent parking accidents in *real time* (no pun intended).
